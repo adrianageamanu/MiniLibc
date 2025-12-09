@@ -8,23 +8,13 @@
 int open(const char *filename, int flags, ...)
 {
 	/* TODO: Implement open system call. */
-	mode_t mode = 0;
+	int ret = syscall(2, filename, flags);
 
-	if (flags & O_CREAT)
+	if (ret < 0)
 	{
-		va_list ap;
-		va_start(ap, flags);
-		mode = va_arg(ap, int);
-		va_end(ap);
-	}
-
-	int fd = syscall(2, filename, flags, mode);
-
-	if (fd < 0)
-	{
-		errno = -fd;
+		errno = -ret;
 		return -1;
 	}
 
-	return fd;
+	return ret;
 }
